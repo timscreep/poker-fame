@@ -5,25 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Зал славы покерных достижений</title>
 <style>
-  body { font-family: Arial, sans-serif; background: #1b1b1b; color: #f0f0f0; padding: 20px; }
-  h1 { text-align: center; color: #ffd700; }
-  ul { list-style: none; padding: 0; }
-  li { margin: 10px 0; cursor: pointer; display: flex; align-items: center; }
-  li.completed { text-decoration: line-through; color: #888; }
-  img { max-width: 200px; display: none; margin-left: 20px; border: 2px solid #ffd700; }
-  .edit-btn { margin-bottom: 20px; }
-  #editArea { margin-bottom: 20px; }
-  input[type="text"], input[type="password"] { padding: 5px; width: 200px; margin-right: 5px; }
-  button { padding: 5px 10px; cursor: pointer; }
+  body { font-family: Arial, sans-serif; background: #111; color: #f0f0f0; padding: 20px; }
+  h1 { text-align: center; color: #ffd700; margin-bottom: 30px; }
+  .edit-btn { display:block; margin: 0 auto 20px; padding: 10px 15px; background: #222; border:none; color:#ffd700; cursor:pointer; font-weight:bold; border-radius:5px; }
+  #editArea { display:none; text-align:center; margin-bottom:20px; }
+  #editArea input[type="text"], #editArea input[type="password"] { padding:5px; width:180px; margin:5px; border-radius:3px; border:none; }
+  #editArea button { padding:5px 10px; margin-left:5px; border:none; background:#ffd700; color:#111; cursor:pointer; border-radius:3px; font-weight:bold; }
+  .achievements-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+  .card { background: #222; border-radius: 15px; padding: 15px; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.5); transition: transform 0.2s, box-shadow 0.2s; position: relative; }
+  .card:hover { transform: translateY(-5px); box-shadow: 0 8px 16px rgba(0,0,0,0.7); }
+  .card.completed { opacity: 0.7; text-decoration: line-through; }
+  .card img { max-width: 100%; border-radius: 10px; margin-top: 10px; display: none; transition: all 0.3s ease; }
+  .card .title { font-weight:bold; font-size:1.1em; color:#ffd700; }
 </style>
 </head>
 <body>
 
 <h1>Зал славы покерных достижений</h1>
-
 <button class="edit-btn" onclick="toggleEdit()">Редактировать достижения</button>
 
-<div id="editArea" style="display:none;">
+<div id="editArea">
   <input type="password" id="adminPassword" placeholder="Пароль">
   <button onclick="login()">Войти</button>
   <div id="addForm" style="display:none; margin-top:10px;">
@@ -33,41 +34,49 @@
   </div>
 </div>
 
-<ul id="achievements"></ul>
+<div class="achievements-grid" id="achievements"></div>
 
 <script>
 const PASSWORD = "mypokerpass"; // <-- поменяй на свой пароль
 
 // Инициализация достижений из localStorage
 let achievements = JSON.parse(localStorage.getItem('achievements')) || [
-  {name:"Выиграл турнир", img:"images/screenshot1.jpg", completed:false}
+  {name:"Выиграл турнир", img:"images/screenshot1.jpg", completed:false},
+  {name:"Прошел серию выигрышей", img:"images/screenshot2.jpg", completed:false}
 ];
+
 renderAchievements();
 
 function renderAchievements() {
-  const ul = document.getElementById('achievements');
-  ul.innerHTML = '';
+  const container = document.getElementById('achievements');
+  container.innerHTML = '';
   achievements.forEach((ach, idx) => {
-    const li = document.createElement('li');
-    li.textContent = ach.name;
-    li.className = ach.completed ? 'completed' : '';
-    li.onclick = () => toggleComplete(idx, li);
+    const card = document.createElement('div');
+    card.className = 'card' + (ach.completed ? ' completed' : '');
+    card.onclick = () => toggleComplete(idx, card);
+
+    const title = document.createElement('div');
+    title.className = 'title';
+    title.textContent = ach.name;
+    card.appendChild(title);
+
     if(ach.img){
       const img = document.createElement('img');
       img.src = ach.img;
       img.alt = ach.name;
-      li.appendChild(img);
+      card.appendChild(img);
     }
-    ul.appendChild(li);
+
+    container.appendChild(card);
   });
 }
 
-function toggleComplete(idx, li) {
+function toggleComplete(idx, card) {
   achievements[idx].completed = !achievements[idx].completed;
   localStorage.setItem('achievements', JSON.stringify(achievements));
-  const img = li.querySelector('img');
+  card.classList.toggle('completed');
+  const img = card.querySelector('img');
   if(img) img.style.display = img.style.display === 'none' ? 'block' : 'none';
-  li.classList.toggle('completed');
 }
 
 function toggleEdit() {
