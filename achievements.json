@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Собрал Пиковый Флеш",
+    "status": "done",
+    "date": "2025-10-05",
+    "img": "images/flushs.jpg"
+  },
+  {
+    "name": "Переехал AA с 72o",
+    "status": "done",
+    "date": "2024-12-20",
+    "img": "images/aa720.jpg"
+  },
+  {
+    "name": "Переехал с 52",
+    "status": "pending",
+    "date": "",
+    "img": ""
+  }
+]
