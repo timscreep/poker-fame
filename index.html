@@ -65,7 +65,7 @@
 <body class="min-h-screen p-6">
   <header class="text-center mb-8">
     <h1 class="text-3xl font-bold text-lavender mb-2">Зал славы</h1>
-    <p class="text-subtext text-sm">Мои покерныеsdsdsd достижения</p>
+    <p class="text-subtext text-sm">Покерные достижения Тима</p>
   </header>
 
   <main class="max-w-5xl mx-auto grid gap-6 sm:grid-cols-2 lg:grid-cols-3" id="achievements-grid">
@@ -83,9 +83,13 @@
     const modalImg = document.getElementById('modal-image');
 
     async function loadAchievements() {
-      const res = await fetch('achievements.json');
-      if (!res.ok) throw new Error('Не удалось загрузить achievements.json');
-      return await res.json();
+  // 🧠 Добавляем уникальный параметр, чтобы GitHub не кэшировал
+  const url = 'achievements.json?v=' + Date.now();
+  const res = await fetch(url, { cache: 'no-store' });
+  if (!res.ok) throw new Error('Не удалось загрузить achievements.json');
+  return await res.json();
+}
+
     }
 
     function render(achievements) {
