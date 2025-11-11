@@ -1,20 +1,38 @@
 [
   {
-    "name": "Собрал Пиковый Флеш",
-    "status": "done",
-    "date": "2025-10-05",
-    "img": "images/image1.png"
+    "name": "Собрал Пиковый Флеш-рояль",
+    "status": "pending",
+    "date": "",
+    "img": "images/flushs.png"
+  },
+    {
+    "name": "Собрал Червовый Флеш-рояль",
+    "status": "pending",
+    "date": "",
+    "img": "images/flushh.png"
+  },
+    {
+    "name": "Собрал Трефовый Флеш-рояль",
+    "status": "pending",
+    "date": "",
+    "img": "images/flushc.png"
+  },
+    {
+    "name": "Собрал Бубновый Флеш-рояль",
+    "status": "pending",
+    "date": "",
+    "img": "images/flushd.png"
   },
   {
     "name": "Переехал AA с 72o",
-    "status": "done",
-    "date": "2024-12-20",
+    "status": "pending",
+    "date": "",
     "img": "images/aa720.jpg"
   },
   {
     "name": "Переехал с 52",
     "status": "pending",
     "date": "",
-    "img": ""
+    "img": "images/52.png"
   }
 ]
