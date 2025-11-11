@@ -1,35 +1,301 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Зал славы покерных достижений</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Зал славы — Catppuccin Mauve</title>
+
+<!-- Tailwind CDN (быстрая проверка/прототип) -->
 <script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  /* Catppuccin Mauve palette (из твоих цветов) */
+  :root{
+    --rosewater: #f5e0dc;
+    --flamingo: #f2cdcd;
+    --pink: #f5c2e7;
+    --mauve: #cba6f7;
+    --red: #f38ba8;
+    --maroon: #eba0ac;
+    --peach: #fab387;
+    --yellow: #f9e2af;
+    --green: #a6e3a1;
+    --teal: #94e2d5;
+    --sky: #89dceb;
+    --sapphire: #74c7ec;
+    --blue: #89b4fa;
+    --lavender: #b4befe;
+    --text: #cdd6f4;
+    --sub1: #bac2de;
+    --sub0: #a6adc8;
+    --ov2: #9399b2;
+    --ov1: #7f849c;
+    --ov0: #6c7086;
+    --surf2: #585b70;
+    --surf1: #45475a;
+    --surf0: #313244;
+    --base: #1e1e2e;
+    --mantle: #181825;
+    --crust: #11111b;
+  }
+
+  /* helper classes to use alongside Tailwind */
+  .bg-base { background-color: var(--base); }
+  .bg-surface1 { background-color: var(--surf1); }
+  .text-main { color: var(--text); }
+  .text-sub { color: var(--sub1); }
+  .text-lav { color: var(--lavender); }
+  .accent-pink { background-color: var(--pink); color: var(--crust); }
+  .accent-green { color: var(--green); }
+
+  /* card shadow tinted */
+  .shadow-mauve { box-shadow: 0 8px 30px rgba(139, 92, 246, 0.12); }
+
+  /* modal */
+  .modal-backdrop { background: rgba(10,10,12,0.7); backdrop-filter: blur(4px); }
+
+  /* small adjustments */
+  .card-title {letter-spacing: 0.2px;}
+  .line-through-custom { text-decoration: line-through; text-decoration-color: rgba(200,200,255,0.15);}
+</style>
 </head>
-<body class="bg-gray-900 text-white min-h-screen p-6">
+<body class="bg-base text-main min-h-screen">
 
-<h1 class="text-4xl font-bold text-yellow-400 text-center mb-8">Зал славы покерных достижений</h1>
+<header class="max-w-5xl mx-auto px-6 py-8 flex items-center justify-between">
+  <div>
+    <h1 class="text-3xl font-extrabold text-lav mb-1">Зал славы покерных достижений</h1>
+    <p class="text-sub">Твои лучшие руки и турнирные победы — теперь красиво.</p>
+  </div>
 
-<ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6" id="achievements">
-  <li class="bg-gray-800 rounded-xl p-4 shadow-lg cursor-pointer hover:scale-105 transition-transform"
-      onclick="toggleComplete(this)" data-img="images/screenshot1.jpg">
-    <div class="font-bold text-yellow-400 text-lg mb-2">Выиграл турнир</div>
-    <img class="mt-2 rounded-lg hidden" src="images/screenshot1.jpg" alt="Скриншот">
-  </li>
-  <li class="bg-gray-800 rounded-xl p-4 shadow-lg cursor-pointer hover:scale-105 transition-transform"
-      onclick="toggleComplete(this)" data-img="images/screenshot2.jpg">
-    <div class="font-bold text-yellow-400 text-lg mb-2">Прошел серию выигрышей</div>
-    <img class="mt-2 rounded-lg hidden" src="images/screenshot2.jpg" alt="Скриншот">
-  </li>
-</ul>
+  <div class="flex items-center gap-3">
+    <button id="editToggle" class="px-3 py-2 rounded-md border border-transparent hover:border-ov1 transition text-sub bg-transparent">Редактировать</button>
+    <a href="#" class="px-3 py-2 rounded-md accent-pink text-sm font-medium hover:opacity-90 transition">Опубликовать</a>
+  </div>
+</header>
+
+<main class="max-w-6xl mx-auto px-6 pb-16">
+  <!-- Edit panel -->
+  <div id="editor" class="mb-8 p-4 bg-surface1 rounded-xl shadow-mauve hidden">
+    <div class="flex gap-3 flex-wrap">
+      <input id="adminPass" type="password" placeholder="Пароль администратора" class="px-3 py-2 rounded-md bg-crust text-main w-64" />
+      <button id="loginBtn" class="px-4 py-2 rounded-md border border-ov0 text-sub">Войти</button>
+
+      <div id="addArea" class="flex gap-3 items-center ml-auto hidden">
+        <input id="achName" type="text" placeholder="Название достижения" class="px-3 py-2 rounded-md bg-crust text-main w-60" />
+        <input id="achImg" type="text" placeholder="URL скриншота (images/…)" class="px-3 py-2 rounded-md bg-crust text-main w-64" />
+        <button id="addBtn" class="px-4 py-2 rounded-md accent-pink text-sm font-semibold">Добавить</button>
+        <button id="resetMarks" class="px-3 py-2 rounded-md border border-ov0 text-sub">Сбросить отметки</button>
+      </div>
+    </div>
+    <p class="text-sub mt-3 text-sm">Данные сохраняются в локальном хранилище браузера. Редактировать — только с паролем.</p>
+  </div>
+
+  <!-- achievements grid -->
+  <section id="grid" class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+    <!-- карточки будут вставлены скриптом -->
+  </section>
+</main>
+
+<!-- modal -->
+<div id="modal" class="fixed inset-0 hidden items-center justify-center z-50">
+  <div class="modal-backdrop absolute inset-0"></div>
+  <div class="relative z-10 max-w-3xl mx-4">
+    <button id="modalClose" class="absolute -top-6 -right-6 bg-crust text-main rounded-full p-2 border border-ov1">✕</button>
+    <div class="bg-surface1 rounded-xl p-4 shadow-mauve">
+      <img id="modalImg" src="" alt="screenshot" class="w-full rounded-md" />
+      <div id="modalCaption" class="mt-3 text-sub"></div>
+    </div>
+  </div>
+</div>
+
+<footer class="max-w-6xl mx-auto px-6 py-6 text-sub text-sm">
+  <div>Сделано с вдохновением от современных UI. Палитра: Catppuccin Mauve.</div>
+</footer>
 
 <script>
-function toggleComplete(el) {
-  el.classList.toggle('line-through', el.classList.contains('line-through') ? false : true);
-  const img = el.querySelector('img');
-  if(img) img.classList.toggle('hidden');
-}
-</script>
+/* =========== Настройки =========== */
+const ADMIN_PASSWORD = "mypokerpass"; // поменяй на свой
+const STORAGE_KEY = "poker_achievements_v1";
 
+/* =========== Примеры данных по умолчанию =========== */
+const defaultAchievements = [
+  { name: "Выиграл турнир", img: "images/screenshot1.jpg", done: false, date: "" },
+  { name: "Прошел серию выигрышей", img: "images/screenshot2.jpg", done: false, date: "" },
+  { name: "Турнирный хайроллер", img: "", done: false, date: "" }
+];
+
+/* =========== Состояние =========== */
+let achievements = JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultAchievements;
+let loggedIn = false;
+
+/* =========== DOM refs =========== */
+const grid = document.getElementById('grid');
+const editor = document.getElementById('editor');
+const editToggle = document.getElementById('editToggle');
+const loginBtn = document.getElementById('loginBtn');
+const adminPass = document.getElementById('adminPass');
+const addArea = document.getElementById('addArea');
+const addBtn = document.getElementById('addBtn');
+const achName = document.getElementById('achName');
+const achImg = document.getElementById('achImg');
+const resetMarks = document.getElementById('resetMarks');
+
+const modal = document.getElementById('modal');
+const modalImg = document.getElementById('modalImg');
+const modalCaption = document.getElementById('modalCaption');
+const modalClose = document.getElementById('modalClose');
+
+/* =========== Render =========== */
+function render() {
+  grid.innerHTML = '';
+  achievements.forEach((a, i) => {
+    const card = document.createElement('article');
+    card.className = `bg-surface1 rounded-xl p-5 shadow-mauve hover:scale-[1.02] transition-transform cursor-pointer relative overflow-hidden`;
+    // title
+    const title = document.createElement('h3');
+    title.className = `text-lav font-semibold text-lg card-title ${a.done ? 'line-through-custom' : ''}`;
+    title.textContent = a.name;
+    card.appendChild(title);
+
+    // meta row
+    const meta = document.createElement('div');
+    meta.className = 'flex items-center justify-between mt-3';
+    const left = document.createElement('div');
+    left.className = 'text-sub text-sm';
+    left.textContent = a.date ? `Выполнено: ${a.date}` : '';
+    meta.appendChild(left);
+
+    const right = document.createElement('div');
+    right.className = 'flex items-center gap-2';
+    // done badge
+    const doneBadge = document.createElement('span');
+    doneBadge.className = `text-sm rounded-full px-2 py-1 ${a.done ? 'accent-green' : 'text-sub'}`;
+    doneBadge.textContent = a.done ? '✓' : '✕';
+    right.appendChild(doneBadge);
+
+    // view button
+    const viewBtn = document.createElement('button');
+    viewBtn.className = 'text-sm px-2 py-1 rounded-md border border-ov0 text-sub hover:text-lav transition';
+    viewBtn.textContent = 'Просмотр';
+    viewBtn.onclick = (e) => { e.stopPropagation(); openModal(a); };
+    right.appendChild(viewBtn);
+
+    // delete button (visible only when logged in)
+    const delBtn = document.createElement('button');
+    delBtn.className = 'text-sm px-2 py-1 rounded-md border border-ov0 text-sub hover:text-red transition hidden';
+    delBtn.textContent = 'Удалить';
+    delBtn.onclick = (e) => { e.stopPropagation(); deleteAchievement(i); };
+    right.appendChild(delBtn);
+
+    meta.appendChild(right);
+    card.appendChild(meta);
+
+    // image preview (small)
+    if (a.img) {
+      const img = document.createElement('img');
+      img.src = a.img;
+      img.alt = a.name;
+      img.className = 'mt-4 rounded-md max-h-44 object-cover w-full hidden';
+      card.appendChild(img);
+    }
+
+    // click toggles done or open full image
+    card.onclick = () => {
+      // if loggedIn and shift key pressed -> delete (convenience)
+      if (loggedIn && window.event && window.event.shiftKey) {
+        deleteAchievement(i);
+        return;
+      }
+      toggleDone(i);
+    };
+
+    grid.appendChild(card);
+
+    // show delete buttons if logged in
+    if (loggedIn) {
+      delBtn.classList.remove('hidden');
+      // show small preview image if exists
+      const imgSmall = card.querySelector('img');
+      if (imgSmall) imgSmall.classList.remove('hidden');
+    }
+  });
+}
+
+/* =========== Actions =========== */
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(achievements));
+  render();
+}
+
+function toggleDone(index) {
+  achievements[index].done = !achievements[index].done;
+  achievements[index].date = achievements[index].done ? new Date().toLocaleDateString() : "";
+  save();
+}
+
+function openModal(item) {
+  if (!item.img) {
+    modalCaption.textContent = "Скриншот отсутствует";
+    modalImg.src = "";
+  } else {
+    modalImg.src = item.img;
+    modalCaption.textContent = item.name;
+  }
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+}
+
+function closeModal() {
+  modal.classList.add('hidden');
+  modal.classList.remove('flex');
+  modalImg.src = "";
+}
+
+function deleteAchievement(index) {
+  if(!confirm('Удалить достижение?')) return;
+  achievements.splice(index,1);
+  save();
+}
+
+/* =========== Editor/login =========== */
+editToggle.addEventListener('click', () => {
+  editor.classList.toggle('hidden');
+});
+
+loginBtn.addEventListener('click', () => {
+  const val = adminPass.value;
+  if (val === ADMIN_PASSWORD) {
+    loggedIn = true;
+    addArea.classList.remove('hidden');
+    alert('Вход выполнен. Теперь можно добавлять/удалять достижения (удаление — Shift+клик по карточке).');
+    render();
+  } else {
+    alert('Неверный пароль.');
+  }
+});
+
+addBtn.addEventListener('click', () => {
+  const n = achName.value.trim();
+  const i = achImg.value.trim();
+  if (!n) { alert('Введите название'); return; }
+  achievements.unshift({ name: n, img: i, done: false, date: "" });
+  achName.value = '';
+  achImg.value = '';
+  save();
+});
+
+resetMarks.addEventListener('click', () => {
+  if (!confirm('Сбросить все отметки о выполнении?')) return;
+  achievements = achievements.map(a => ({...a, done: false, date: ""}));
+  save();
+});
+
+/* modal handlers */
+modalClose.addEventListener('click', closeModal);
+modal.addEventListener('click', (e) => { if (e.target === modal || e.target.classList.contains('modal-backdrop')) closeModal(); });
+
+/* initial render */
+render();
+</script>
 </body>
 </html>
