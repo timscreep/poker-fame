@@ -4,8 +4,32 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Зал славы покерных достижений</title>
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<p>Здесь будет зал славы моих покерных достижений.</p>
+<body class="bg-gray-900 text-white min-h-screen p-6">
+
+<h1 class="text-4xl font-bold text-yellow-400 text-center mb-8">Зал славы покерных достижений</h1>
+
+<ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6" id="achievements">
+  <li class="bg-gray-800 rounded-xl p-4 shadow-lg cursor-pointer hover:scale-105 transition-transform"
+      onclick="toggleComplete(this)" data-img="images/screenshot1.jpg">
+    <div class="font-bold text-yellow-400 text-lg mb-2">Выиграл турнир</div>
+    <img class="mt-2 rounded-lg hidden" src="images/screenshot1.jpg" alt="Скриншот">
+  </li>
+  <li class="bg-gray-800 rounded-xl p-4 shadow-lg cursor-pointer hover:scale-105 transition-transform"
+      onclick="toggleComplete(this)" data-img="images/screenshot2.jpg">
+    <div class="font-bold text-yellow-400 text-lg mb-2">Прошел серию выигрышей</div>
+    <img class="mt-2 rounded-lg hidden" src="images/screenshot2.jpg" alt="Скриншот">
+  </li>
+</ul>
+
+<script>
+function toggleComplete(el) {
+  el.classList.toggle('line-through', el.classList.contains('line-through') ? false : true);
+  const img = el.querySelector('img');
+  if(img) img.classList.toggle('hidden');
+}
+</script>
+
 </body>
 </html>
