@@ -1,1 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Зал славы покерных достижений</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #1b1b1b; color: #f0f0f0; padding: 20px; }
+  h1 { text-align: center; color: #ffd700; }
+  ul { list-style: none; padding: 0; }
+  li { margin: 10px 0; cursor: pointer; display: flex; align-items: center; }
+  li.completed { text-decoration: line-through; color: #888; }
+  img { max-width: 200px; display: none; margin-left: 20px; border: 2px solid #ffd700; }
+  .edit-btn { margin-bottom: 20px; }
+  #editArea { margin-bottom: 20px; }
+  input[type="text"], input[type="password"] { padding: 5px; width: 200px; margin-right: 5px; }
+  button { padding: 5px 10px; cursor: pointer; }
+</style>
+</head>
+<body>
 
+<h1>Зал славы покерных достижений</h1>
+
+<button class="edit-btn" onclick="toggleEdit()">Редактировать достижения</button>
+
+<div id="editArea" style="display:none;">
+  <input type="password" id="adminPassword" placeholder="Пароль">
+  <button onclick="login()">Войти</button>
+  <div id="addForm" style="display:none; margin-top:10px;">
+    <input type="text" id="newAchievement" placeholder="Новое достижение">
+    <input type="text" id="newScreenshot" placeholder="Ссылка на скриншот">
+    <button onclick="addAchievement()">Добавить</button>
+  </div>
+</div>
+
+<ul id="achievements"></ul>
+
+<script>
+const PASSWORD = "mypokerpass"; // <-- поменяй на свой пароль
+
+// Инициализация достижений из localStorage
+let achievements = JSON.parse(localStorage.getItem('achievements')) || [
+  {name:"Выиграл турнир", img:"images/screenshot1.jpg", completed:false}
+];
+renderAchievements();
+
+function renderAchievements() {
+  const ul = document.getElementById('achievements');
+  ul.innerHTML = '';
+  achievements.forEach((ach, idx) => {
+    const li = document.createElement('li');
+    li.textContent = ach.name;
+    li.className = ach.completed ? 'completed' : '';
+    li.onclick = () => toggleComplete(idx, li);
+    if(ach.img){
+      const img = document.createElement('img');
+      img.src = ach.img;
+      img.alt = ach.name;
+      li.appendChild(img);
+    }
+    ul.appendChild(li);
+  });
+}
+
+function toggleComplete(idx, li) {
+  achievements[idx].completed = !achievements[idx].completed;
+  localStorage.setItem('achievements', JSON.stringify(achievements));
+  const img = li.querySelector('img');
+  if(img) img.style.display = img.style.display === 'none' ? 'block' : 'none';
+  li.classList.toggle('completed');
+}
+
+function toggleEdit() {
+  const area = document.getElementById('editArea');
+  area.style.display = area.style.display === 'none' ? 'block' : 'none';
+}
+
+function login() {
+  const pw = document.getElementById('adminPassword').value;
+  if(pw === PASSWORD){
+    document.getElementById('addForm').style.display = 'block';
+    alert("Вход успешен! Теперь можно добавлять достижения.");
+  } else {
+    alert("Неверный пароль!");
+  }
+}
+
+function addAchievement() {
+  const name = document.getElementById('newAchievement').value;
+  const imgLink = document.getElementById('newScreenshot').value;
+  if(!name) return alert("Введите название достижения!");
+  achievements.push({name:name, img:imgLink, completed:false});
+  localStorage.setItem('achievements', JSON.stringify(achievements));
+  renderAchievements();
+  document.getElementById('newAchievement').value = '';
+  document.getElementById('newScreenshot').value = '';
+}
+</script>
+
+</body>
+</html>
