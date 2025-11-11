@@ -90,8 +90,6 @@
   return await res.json();
 }
 
-    }
-
     function render(achievements) {
       grid.innerHTML = achievements.map(a => `
         <div class="card rounded-xl p-4 cursor-pointer" onclick="openImage('${a.img}')">
