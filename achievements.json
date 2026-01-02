@@ -3,25 +3,25 @@
     "name": "Собрал Пиковый Флеш-рояль",
     "status": "pending",
     "date": "",
-    "img": "images/flushs.png"
+    "img": "images/flush_s.png"
   },
     {
     "name": "Собрал Червовый Флеш-рояль",
     "status": "pending",
     "date": "",
-    "img": "images/flushh.png"
+    "img": "images/flush_h.png"
   },
     {
     "name": "Собрал Трефовый Флеш-рояль",
     "status": "pending",
     "date": "",
-    "img": "images/flushc.png"
+    "img": "images/flush_c.png"
   },
     {
     "name": "Собрал Бубновый Флеш-рояль",
     "status": "pending",
     "date": "",
-    "img": "images/flushd.png"
+    "img": "images/flush_d.png"
   },
   {
     "name": "Переехал AA с 72o",
@@ -30,7 +30,7 @@
     "img": "images/aa720.jpg"
   },
   {
-    "name": "Переехал с 52",
+    "name": "Переехал AA с 52",
     "status": "pending",
     "date": "",
     "img": "images/52.png"
